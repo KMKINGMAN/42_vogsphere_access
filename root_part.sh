@@ -4,40 +4,33 @@
 
 cat >> /etc/krb5.conf << EOF
 [libdefaults]
-	default_realm = 42.FR
-	forwardable = true
-	proxiable = true
-      	dns_lookup_kdc = no
-      	dns_lookup_realm = no
-	allow_weak_crypto = true
+default_realm = 42AMMAN.COM
+forwardable = true
+proxiable = true
+dns_lookup_kdc = no
+dns_lookup_realm = no
+allow_weak_crypto = true
+rdns = false
+default_keytab_name = FILE:/etc/krb5.keytab
 
 [realms]
-	42.FR = {
-                kdc = kdc1.42.fr
-                kdc = kdc2.42.fr
-                admin_server = kdc1.42.fr
-		default_domain = 42.fr
-		default_lifetime = 7d
-                ticket_lifetime = 7d
-	}
-        STAFF.42.FR = {
-                kdc = dc1.staff.42.fr
-                admin_server = dc1.staff.42.fr
-                default_domain = staff.42.fr
-        }
+42AMMAN.COM = {
+        kdc = ldap.42amman.com
+        default_domain = 42amman.com
+        database_module = openldap_ldapconf
+}
 
 [domain_realm]
-	.42.fr = 42.FR
-	42.fr = 42.FR
-	.staff.42.fr = STAFF.42.FR
-	staff.42.fr = STAFF.42.FR
+.42amman.com = 42AMMAN.COM
+42amman.com = 42AMMAN.COM
+
 EOF
 
 ### We set up the ssh config file to access to 42's git server (vogsphere)
 ### using your kerberos identification
 
 cat >> /etc/ssh/ssh_config << EOF
-Host *.42.fr
+Host *.42amman.com
      SendEnv LANG LC_*
      StrictHostKeyChecking no
      GSSAPIAuthentication yes
